@@ -1,7 +1,8 @@
 import express, { response } from "express";
-import { db, connectToDb } from "./db.js"
+import { db, connectToDb } from "./db.js";
+import cors from 'cors';
 const app = express();
-app.use(express.json());
+app.use(express.json(), cors());
 
 // app.post("/hello", (req, res) => {
 //     res.send(`Hello ${req.body.name}!`)
@@ -26,6 +27,7 @@ app.get("/api/articles/:name", async (req, res) => {
 	const { name } = req.params
 	const article = await db.collection('articles').findOne({ name })
 	if (article) {
+		console.log(article);
 		res.json(article);
 	} else {
 		res.sendStatus(404).send('Article not found');
@@ -35,8 +37,6 @@ app.get("/api/articles/:name", async (req, res) => {
 
 app.put("/api/articles/:name/upvote", async (req, res) => {
 	const { name } = req.params;
-	console.log(db.collection('articles').find());
-
 	await db.collection('articles').updateOne({ name }, {
 		$inc: {
 			upvotes: 1
@@ -44,7 +44,8 @@ app.put("/api/articles/:name/upvote", async (req, res) => {
 	})
 	const article = await db.collection('articles').findOne({ name })
 	if (article) {
-		res.json(`The article ${name} has ${article.upvotes}`);
+		console.log(article);
+		res.json(article);
 	} else {
 		res.send(`The article ${name} doesn't exist`);
 	}
@@ -62,7 +63,6 @@ app.post("/api/articles/:name/comments", async (req, res) => {
 	if (article) {
 		res.json(article.comments);
 		console.log(article);
-
 	} else {
 		res.send(`The article ${name} doesn't exist`);
 	}
