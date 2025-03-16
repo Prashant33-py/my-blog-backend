@@ -61,8 +61,7 @@ app.post("/api/articles/:name/comments", async (req, res) => {
 	})
 	const article = await db.collection('articles').findOne({ name })
 	if (article) {
-		res.json(article.comments);
-		console.log(article);
+		res.json(article);
 	} else {
 		res.send(`The article ${name} doesn't exist`);
 	}
